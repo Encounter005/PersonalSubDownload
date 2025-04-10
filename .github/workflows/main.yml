@@ -1,8 +1,5 @@
 name: Run Converter Script
 
-permissions:
-  contents: write
-
 on:
   schedule:
     - cron: '0 0 */2 * *'  # 每隔两天 UTC 时间 00:00 执行
@@ -31,20 +28,4 @@ jobs:
       - name: Execute converter script
         run: python converter.py
 
-      - name: Check if res.txt was generated
-        id: check_file
-        run: |
-          if [ -f "Custom_Clash.ini" ]; then
-            echo "::set-output name=exists::true"
-          else
-            echo "::set-output name=exists::false"
-          fi
 
-      - name: Replace existing Custom_Clash.ini
-        if: steps.check_file.outputs.exists == 'true'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "GitHub Actions Bot"
-          git add Custom_Clash.ini
-          git commit -m "Update Custom_Clash.ini via GitHub Actions"
-          git push
